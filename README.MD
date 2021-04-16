@@ -33,13 +33,13 @@ E-CAM20 (STEEREOCAM) es un dispositivo de visión estéreo diseñado por e-con s
 
 La siguiente lista muestra la documentación disponible para el uso de la cámara:
 
-- **instructivo_de_uso_ecam20.pdf**: Corresponde a un instructivo en donde se explica como montar la cámara estéreo e-cam20 en la Jetson Nano e instalar los software y dependencias necesarias para poder utilizar el dispositivo.
+- **[Instructivo de uso](instructivo_de_uso_ecam20.pdf)**: Corresponde a un instructivo en donde se explica como montar la cámara estéreo e-cam20 en la Jetson Nano e instalar los software y dependencias necesarias para poder utilizar el dispositivo.
 
-- **datasheet_cam.pdf**: Datasheet de la cámara estéreo.
+- **[Datasheet cámara](datasheet_cam.pdf)**: Datasheet de la cámara estéreo.
 
-- **datasheet_lens.pdf**: Datasheet de los lentes de la cámara estéreo.
+- **[Datasheet lentes](datasheet_lens.pdf)**: Datasheet de los lentes de la cámara estéreo.
 
-- **TaraXL_API.pdf**: Descripción de la API del **SDK** para utilizar la cámara estéreo en C++.
+- **[Documentación API](TaraXL_API.pdf)**: Descripción de la API del **SDK** para utilizar la cámara estéreo en C++.
 
 # Módulos
 A continuación se muestran los módulos disponibles que pueden ser utilizados junto al dispositivo.
@@ -52,8 +52,8 @@ Este módulo obtiene imágenes de ambos lentes de la cámara utilizando el **SDK
  luego de haber completado el instructivo `instructivo_de_uso_ecam20.pdf`, se debe clonar el repositorio a la jetson de destino y compilar el programa, ejecutando los siguientes comandos:
 
 ```
-$ git clone https://github.com/tomaspoupin/lineas_de_fondeo.git
-$ cd lineas_de_fondeo/dispositivos/e-cam20/basic_imgproc
+$ git clone https://github.com/tomaspoupin/SteereoCAM.git
+$ cd SteereoCam/basic_imgproc
 $ mkdir build -p && cd build
 $ cmake ..
 $ make
@@ -76,8 +76,8 @@ El módulo de captura de video permite grabar en tiempo real utilizando la cáma
 1. Dentro del terminal de la Jetson Nano, clonar el repositorio y entrar a la carpeta del módulo.
 
 ```
-$ git clone https://github.com/tomaspoupin/lineas_de_fondeo.git
-$ cd lineas_de_fondeo/dispositivos/e-cam20/video_capture
+$ git clone https://github.com/tomaspoupin/SteereoCAM.git
+$ cd SteereoCam/video_capture
 ```
 
 2. Compilar el programa.
@@ -109,17 +109,57 @@ Luego para finalizar la grabación, se debe presionar la tecla `f`.
 
 Para medir el desempeño de la cámara se generaron una serie de pruebas de rendimiento, su implementación se encuentra en `benchmarks`, los benchmarks disponibles son los siguientes:
 
-- **Benchmark FPS**: Benchmark que mide la cantidad fps obtenidas al grabar normalmente con la cámara estéreo.
-- **Benchmark SDK Depth Map**: Mide la cantidad de fps obtenidos al obtener en tiempo real mapas de profundidad y disparidad utilizando el **SDK** De la cámara.
-- **Benchmark OpenCV Disparity Map**: Mide la cantidad de fps a partir de la obtención continua de mapas de disparidad mediante la API de OpenCV.
+- **Benchmark FPS**: Benchmark que mide la velocidad con la cual el dispositivo es capaz de adquirir un frame de ambos lentes de la cámara.
+    
+  - Parámetros:
+
+    - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos
+  
+  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlCam.grabFrame` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+
+  - Resultados:
+
+    - Archivo `.csv` el cual contiene una lista de las mediciones realizadas en `fps`. 
+
+- **Benchmark SDK Disp Depth Map**: Benchmark que mide la velocidad con la cual el dispositivo es capaz de obtener un un mapa de profundidad, un mapa de disparidad y un frame de ambos lentes.
+
+  - Parámetros:
+
+    - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
+    - Nivel de precisión: Cantidad de procesamiento realizado, tiene tres niveles: **LOW**, **HIGH** y **ULTRA**
+  
+  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+
+  - Resultados:
+
+    - Archivo `.csv` el cual contiene una lista de las mediciones realizadas en `fps`.
+    - Video en formato `.mkv` que contiene mapas de disparidad obtenidas durante el benchmark.
+    - Video en formato `.mkv` que contiene mapas de profundidad obtenidas durante el benchmark.
+    - 2 Videos en formato `.mkv` que contiene las imágenes obtenidas del lente izquierdo y derecho.
+
+- **Benchmark OpenCV Disparity Map**: Mide la velocidad con la cual el dispositivo es capaz de obtener mapas de disparidad, utilizando la API de OpenCV.
+
+  - Parámetros:
+
+    - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
+    - Numero de disparidades: El rango de busqueda de disparidades, debe ser un múltiplo de **16**.
+    - Tamaño de bloque: El tamaño de bloque con el cual se comparan las imagenes para realizar matching, debe ser un numero **impar**
+  
+  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+
+  - Resultados:
+
+    - Archivo `.csv` el cual contiene una lista de las mediciones realizadas en `fps`.
+    - Video en formato `.mkv` que contiene mapas de disparidad obtenidas durante el benchmark.
+    - 2 Videos en formato `.mkv` que contiene las imágenes obtenidas del lente izquierdo y derecho.
 
 ## Instrucciones de instalación
 
 1. Dentro del terminal de la Jetson Nano, clonar el repositorio y entrar a la carpeta `benchmarks`.
 
 ```
-$ git clone https://github.com/tomaspoupin/lineas_de_fondeo.git
-$ cd lineas_de_fondeo/dispositivos/e-cam20/benchmarks
+$ git clone https://github.com/tomaspoupin/SteereoCAM.git
+$ cd SteereoCam/benchmarks
 ```
 
 2. Compilar el programa.
@@ -139,7 +179,9 @@ Dentro del directorio `benchmarks` debiese aparecer un directorio llamado `bin` 
 A continuación se explica el uso de cada uno de los ejecutables.
 
 ## Instrucciones de uso
+
 Para cada uno de los programas se debe estár dentro de la carpeta `benchmarks/bin`. Al finalizar la ejecución los resultados son exportados al directorio `benchmarks/bin/report/<nombre de benchmark>`.
+
 ### **Benchmark FPS**
 
 El formato de ejecución del programa es el siguiente:
@@ -148,7 +190,7 @@ El formato de ejecución del programa es el siguiente:
 $ ./benchmark_fps <time_in_seconds>
 ```
 
-Donde `time_in_seconds` es el tiempo de ejecución del benchmark en segundos. Por ejemplo, para ejecutar el benchmark durante 60 segundos, ejecutamos:
+Donde `time_in_seconds` es el tiempo de ejecución del benchmark en segundos. Por ejemplo, para ejecutar el benchmark durante 60 segundos, se ejecuta:
 
 ```
 $ ./benchmark_fps 60
@@ -178,7 +220,7 @@ Donde `time` es el tiempo de ejecución en segundos y `depth_accuracy` es el niv
 - `1`: Precisión Alta
 - `2`: Precisión Ultra
 
-Cómo ejemplo, para ejecutar durante 30 segundos en precisión alta escribimos:
+Cómo ejemplo, para ejecutar durante 30 segundos en precisión alta se escribe:
 
 ```
 $ ./benchmark_depth_sdk 30 1
@@ -192,9 +234,9 @@ El formato de ejecución del programa es el siguiente:
 $ ./benchmark_disparity_opencv <time> <disp> <block>
 ```
 
-Donde `time` es el tiempo de ejecución en segundos, `disp` es el nivel número de disparidades el cual debe ser múltiplo de 16, `block` es el tamaño de bloque de comparación, el cual debe ser un numero impar.
+Donde `time` es el tiempo de ejecución en segundos, `disp` es el número de disparidades el cual debe ser múltiplo de 16, `block` es el tamaño de bloque de comparación, el cual debe ser un numero impar.
 
-Cómo ejemplo, para ejecutar durante 30 segundos con disparidad de 64 y tamaño de bloque de 9, ejecutamos:
+Cómo ejemplo, para ejecutar durante 30 segundos con disparidad de 64 y tamaño de bloque de 9, se ejecuta:
 
 ```
 $ ./benchmark_disparity_opencv 30 64 9
