@@ -156,7 +156,7 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
     - Numero de disparidades: El rango de busqueda de disparidades, debe ser un múltiplo de **16**.
     - Tamaño de bloque: El tamaño de bloque con el cual se comparan las imagenes para realizar matching, debe ser un numero **impar**.
   
-  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+  - Variable medida: Tiempo de ejecución en `ms` de función `cv::StereoBM::compute` (vease [documentación](https://docs.opencv.org/3.4/d2/d6e/classcv_1_1StereoMatcher.html#a03f7087df1b2c618462eb98898841345)).
 
   - Resultados:
 
