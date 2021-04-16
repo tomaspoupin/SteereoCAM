@@ -17,13 +17,14 @@ En este repositorio se podrá encontrar información relevante acerca del uso de
     - [**Instrucciones de instalación**](#instrucciones-de-instalación-1)
     - [**Instrucciones de uso**](#instrucciones-de-uso)
 - [Benchmarks](#benchmarks)
+  - [Benchmarks de velocidad](#benchmarks-de-velocidad)
   - [Instrucciones de instalación](#instrucciones-de-instalación-2)
   - [Instrucciones de uso](#instrucciones-de-uso-1)
     - [**Benchmark FPS**](#benchmark-fps)
     - [**Benchmark SDK Depth Map**](#benchmark-sdk-depth-map)
     - [**Benchmark OpenCV Disparity Map**](#benchmark-opencv-disparity-map)
   - [Resultados](#resultados)
-    - [**Comparación**](#comparación)
+    - [**Comparación Velocidad**](#comparación-velocidad)
     - [**Histogramas**](#histogramas)
 
 # Descripción Dispositivo
@@ -109,13 +110,15 @@ Luego para finalizar la grabación, se debe presionar la tecla `f`.
 
 Para medir el desempeño de la cámara se generaron una serie de pruebas de rendimiento, su implementación se encuentra en `benchmarks`, los benchmarks disponibles son los siguientes:
 
+## Benchmarks de velocidad
+
 - **Benchmark FPS**: Benchmark que mide la velocidad con la cual el dispositivo es capaz de adquirir un frame de ambos lentes de la cámara.
     
   - Parámetros:
 
-    - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos
+    - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
   
-  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlCam.grabFrame` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlCam.grabFrame` (vease [documentación API](instructivo_de_uso_ecam20.pdf)).
 
   - Resultados:
 
@@ -126,9 +129,9 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
   - Parámetros:
 
     - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
-    - Nivel de precisión: Cantidad de procesamiento realizado, tiene tres niveles: **LOW**, **HIGH** y **ULTRA**
+    - Nivel de precisión: Cantidad de procesamiento realizado, tiene tres niveles: **LOW**, **HIGH** y **ULTRA**. **LOW** implica mayor FPS, menor precisión, con un rango útil de 145[cm] a 8[m]. **HIGH** implica menor FPS, mayor precisión, con un rango útil de 95[cm] a 8[m]. **ULTRA** implica FPS muy reducidos, mayor precisión con un rango útil de 115[cm] a 8[m].
   
-  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
+  - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf)).
 
   - Resultados:
 
@@ -143,7 +146,7 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
 
     - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
     - Numero de disparidades: El rango de busqueda de disparidades, debe ser un múltiplo de **16**.
-    - Tamaño de bloque: El tamaño de bloque con el cual se comparan las imagenes para realizar matching, debe ser un numero **impar**
+    - Tamaño de bloque: El tamaño de bloque con el cual se comparan las imagenes para realizar matching, debe ser un numero **impar**.
   
   - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf))
 
@@ -251,7 +254,7 @@ Precisión Baja            |  OpenCV
 :-------------------------:|:-------------------------:
 ![](media/depth_low_animated.gif)  |  ![](media/opencv_animated.gif)
 
-### **Comparación**
+### **Comparación Velocidad**
 
 A continuación se muestra una comparativa entre los resultados obtenidos y las especificaciones del fabricante.
 
@@ -261,6 +264,7 @@ A continuación se muestra una comparativa entre los resultados obtenidos y las 
 |  FPS Generación Mapas LOW  |     10 FPS     |   8.5550  |
 |  FPS Generación Mapas HIGH |        -       |   7.0337  |
 | FPS Generación Mapas ULTRA |        -       |   2.1800  |
+
 
 ### **Histogramas**
 
