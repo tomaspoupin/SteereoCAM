@@ -97,6 +97,14 @@ $ ./video_capture
 
 ### **Instrucciones de uso**
 
+La sinopsis del programa es el siguiente:
+
+```
+video_capture [OPTION]
+[OPTION]: [-v], [--verbose]
+```
+
+`-v` o `--verbose` es opcional y entrega información adicional en pantalla para fines de depuración.
 Al ejecutar el programa se debe seleccionar el formato de grabación:
 
 - `0`: Grabación HD

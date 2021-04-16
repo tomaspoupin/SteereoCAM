@@ -15,9 +15,10 @@ using namespace TaraXLSDK;
 using StereoPair = std::pair<cv::Mat, cv::Mat>;
 
 bool KEEP_RECORDING = true;
+bool VERBOSE = false;
+long int frame_count = 0;
 
 std::mutex stereo_mutex;
-std::mutex frame_mutex;
 
 struct cam_params {
     double fps;
@@ -33,17 +34,29 @@ cv::VideoWriter get_videowriter(cam_params& params);
 void wait_for_key();
 double get_framerate(TaraXLCam& selected_cam);
 void record_video(TaraXLCam& selected_cam, cam_params& params);
-void process_stereo_pair(std::deque<StereoPair>& stereo_queue,
-                         std::deque<cv::Mat>& frames_queue,
+void process_stereo_pair(cv::VideoWriter& stereo_cam,
+                         std::deque<StereoPair>& stereo_queue,
                          cam_params& params);
-void write_frame(cv::VideoWriter& stereo_cam, std::deque<cv::Mat>& frames_queue);
+void show_status(std::deque<StereoPair>& stereo_queue);
 
 int main(int argc, char **argv) {
 
     // Inicialización de cámara
     if (argc != 1) {
-        std::cerr << "El progama no requiere argumentos." << std::endl;
-        return 1;
+        const char* verbose_option_1 = "-v";
+        const char* verbose_option_2 = "--verbose";
+        bool set_verbose =
+                (std::strcmp(argv[1], verbose_option_1) == 0) ||
+                (std::strcmp(argv[1], verbose_option_2) == 0);
+        if (set_verbose) {
+            VERBOSE = true;
+            std::cout << "Verbose activado." << std::endl;
+        }
+        else {
+            std::cerr << "Uso: video_capture [OPTION]" << std::endl;
+            std::cerr << "OPTION: -v, --verbose" << std::endl;
+            return 1;
+        }
     }
 
     TaraXL taraxl_cam;
@@ -78,15 +91,14 @@ void record_video(TaraXLCam& selected_cam, cam_params& params)
 {
     cv:: VideoWriter stereo_cam = get_videowriter(params);
     std::deque<StereoPair> stereo_queue;
-    std::deque<cv::Mat> frames_queue;
 
+    if (VERBOSE)
+        std::cout << std::endl << "Creando hilos de procesamiento." << std::endl;
     std::thread stereo_processor(process_stereo_pair,
+                                 std::ref(stereo_cam),
                                std::ref(stereo_queue),
-                               std::ref(frames_queue),
                                std::ref(params));
-    std::thread frame_writer(write_frame,
-                             std::ref(stereo_cam),
-                             std::ref(frames_queue));
+    std::thread status(show_status, std::ref(stereo_queue));
 
     while (KEEP_RECORDING) {
         cv::Mat left, right;
@@ -96,9 +108,14 @@ void record_video(TaraXLCam& selected_cam, cam_params& params)
         stereo_queue.push_back(std::make_pair(left, right));
         stereo_mutex.unlock();
     }
-
+    if (VERBOSE)
+        std::cout << "Esperando término de hilos de procesamiento." << std::endl;
+    status.join();
+    if (VERBOSE)
+        std::cout << "{Status} Finalizado." << std::endl;
     stereo_processor.join();
-    frame_writer.join();
+    if (VERBOSE)
+        std::cout << "{Hilo Estéreo} Finalizado." << std::endl;
 
     stereo_cam.release();
     selected_cam.disconnect();
@@ -106,17 +123,22 @@ void record_video(TaraXLCam& selected_cam, cam_params& params)
     std::cout << "Grabación finalizada con exito!" << std::endl;
 }
 
-void process_stereo_pair(std::deque<StereoPair>& stereo_queue,
-                         std::deque<cv::Mat>& frames_queue,
+void process_stereo_pair(cv::VideoWriter& stereo_cam,
+                         std::deque<StereoPair>& stereo_queue,
                          cam_params& params) {
-    while (KEEP_RECORDING) {
-        if (stereo_queue.size() <= 0)
-            continue;
-
-        cv::Mat frame;
+    bool queue_not_empty = false;
+    while (KEEP_RECORDING || queue_not_empty > 0) {
         stereo_mutex.lock();
+
+        size_t stereo_queue_size = stereo_queue.size();
+        if (stereo_queue_size <= 0) {
+            queue_not_empty = false;
+            stereo_mutex.unlock();
+            continue;
+        }
+        queue_not_empty = true;
+        cv::Mat frame;
         StereoPair& stereo_frame = stereo_queue.front();
-        stereo_mutex.unlock();
 
         cv::hconcat(stereo_frame.first, stereo_frame.second, frame);
         cv::resize(frame,
@@ -124,31 +146,37 @@ void process_stereo_pair(std::deque<StereoPair>& stereo_queue,
                    cv::Size(params.res.width,params.res.height),
                    0, 0,
                    cv::INTER_LINEAR);
+        stereo_cam.write(frame);
 
-        frame_mutex.lock();
-        frames_queue.push_back(frame);
-        frame_mutex.unlock();
-
-        stereo_mutex.lock();
+        frame_count++;
         stereo_queue.pop_front();
         stereo_mutex.unlock();
     }
 }
 
-void write_frame(cv::VideoWriter& stereo_cam, std::deque<cv::Mat>& frames_queue) {
+void show_status(std::deque<StereoPair>& stereo_queue) {
+    if (!VERBOSE)
+        return;
+
+    size_t stereo_queue_size;
+    long int n_frames;
+
+    double verbose_time = 2000.0; // ms
+    auto init = std::chrono::high_resolution_clock::now();
     while (KEEP_RECORDING) {
-        if (frames_queue.size() <= 0)
-            continue;
+        auto checkpoint = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> ms_checkpoint = checkpoint - init;
+        if (ms_checkpoint.count() >= verbose_time) {
+            stereo_mutex.lock();
+            stereo_queue_size = stereo_queue.size();
+            n_frames = frame_count;
+            stereo_mutex.unlock();
 
-        frame_mutex.lock();
-        cv::Mat& frame = frames_queue.front();
-        frame_mutex.unlock();
+            std::cout << std::endl << "Tamaño cola estéreo: " << stereo_queue_size << std::endl;
+            std::cout << "Numero de frames escritos: " << n_frames << std::endl;
 
-        stereo_cam.write(frame);
-
-        frame_mutex.lock();
-        frames_queue.pop_front();
-        frame_mutex.unlock();
+            init = std::chrono::high_resolution_clock::now();
+        }
     }
 }
 
@@ -274,5 +302,6 @@ double get_framerate(TaraXLCam& selected_cam) {
         cumsum += time;
     }
     double mean = cumsum / (double)measurements.size();
-    return 1000.0 / mean;
+    double fps = (1000.0 / mean) - 6;
+    return fps;
 }
