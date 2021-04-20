@@ -19,7 +19,7 @@ namespace fs = boost::filesystem;
 using namespace TaraXLSDK;
 
 /**
- * Los resultados de cada benchmark serán guardados en esta estructura
+ * @brief Los resultados de cada benchmark serán guardados en esta estructura
  */
 struct StereoPayload {
     std::vector<cv::Mat> left;
@@ -30,7 +30,7 @@ struct StereoPayload {
 };
 
 /**
- * Los parámetros de la cámara quedan almacenados en esta estructura.
+ * @brief Los parámetros de la cámara quedan almacenados en esta estructura.
  */
 struct StereoParams {
     cv::Mat Q_MATRIX;
@@ -43,7 +43,7 @@ struct StereoParams {
 };
 
 /**
- * Parámetros que definen el flujo de procesamiento dentro de un benchmark.
+ * @brief Parámetros que definen el flujo de procesamiento dentro de un benchmark.
  */
 struct StereoProcParams {
     int NUM_DISPARITIES;
@@ -62,7 +62,7 @@ struct StereoProcParams {
 };
 
 /**
- * Clase interfaz que define el comportamiento de un benchmark.
+ * @brief Clase interfaz que define el comportamiento de un benchmark.
  */
 class Benchmark {
 public:
@@ -74,7 +74,7 @@ public:
 };
 
 /**
- * Benchmark que mide cantidad de fps que puede medir la camara.
+ * @brief Benchmark que mide cantidad de fps que puede medir la camara.
  */
 class FramerateBenchmark : public Benchmark {
 public:
@@ -92,7 +92,7 @@ private:
 };
 
 /**
- * Benchmark que mide la velocidad con la cual se puede generar mapas de
+ * @brief Benchmark que mide la velocidad con la cual se puede generar mapas de
  * profundidad y disparidad utilizando el SDK de TaraXL
  */
 class DepthSDKBenchmark : public Benchmark {
@@ -113,7 +113,7 @@ private:
 };
 
 /**
- * Benchmark que mide la velocidad con la cual es posible obtener mapas de disparidad
+ * @brief Benchmark que mide la velocidad con la cual es posible obtener mapas de disparidad
  * utilizando OpenCV.
  */
 class DepthOpenCVBenchmark : public Benchmark {
@@ -135,7 +135,7 @@ private:
 };
 
 /**
- * Benchmark que mide velocidad con la cual se pueden obtener nube de puntos
+ * @brief Benchmark que mide velocidad con la cual se pueden obtener nube de puntos
  */
 class PCLSDKBenchmark : public Benchmark {
 public:
@@ -155,7 +155,8 @@ private:
 };
 
 /**
- * Inicializa la cámara estéreo
+ * @brief Inicializa la cámara estéreo
+ * 
  * @param taraxl_cam Objeto principal del SDK de la cámara
  * @param selected_cam Cámara estéreo seleccionada
  * @param taraxl_cam_list lista de dispositivos disponibles
@@ -168,24 +169,35 @@ bool init_camera(TaraXL& taraxl_cam,
                  TARAXL_STATUS_CODE& status);
 
 /**
- * Ejecuta operación de benchmark de acuerdo al benchmark escogido
+ * @brief Ejecuta operación de benchmark de acuerdo al benchmark escogido
+ * 
  * @param benchmark benchmark a ejecutar
  * @param time_ms
  */
 void test_performance(Benchmark& benchmark, double time_ms);
 
 /**
- * Calcula el promedio de un arreglo
+ * @brief Calcula el promedio de un arreglo
+ * 
  * @param measurements arreglo de mediciones
  * @return Promedio de mediciones
  */
 double promedio(const std::vector<double>& measurements);
 
 /**
- * Graba un video en formato mkv a partir de un arreglo de imágenes
+ * @brief Graba un video en formato mkv a partir de un arreglo de imágenes
+ * 
  * @param footage Arreglo de imágenes a grabar
  * @param fps FPS con la cual será grabado el video
  * @param filename nombre del archivo de destino
  */
 void record_video(std::vector<cv::Mat>& footage, double fps, const std::string& filename);
+
+/**
+ * @brief Obtiene los parámetros de la cámara estéreo.
+ * 
+ * @param selected_cam Cámara a obtener parámetros
+ * @param params parámetros de la cámara que serán llenados
+ */
+void get_stereo_params(TaraXLCam& selected_cam, StereoParams& params);
 #endif
