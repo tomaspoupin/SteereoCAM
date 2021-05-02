@@ -2,6 +2,7 @@
 #define __ECAMCOMMON__
 #include <chrono>
 #include <vector>
+#include <string>
 #include <opencv2/imgproc.hpp>
 #include <opencv2/calib3d.hpp>
 #include "TaraXL.h"
@@ -200,4 +201,12 @@ void record_video(std::vector<cv::Mat>& footage, double fps, const std::string& 
  * @param params parámetros de la cámara que serán llenados
  */
 void get_stereo_params(TaraXLCam& selected_cam, StereoParams& params);
+
+/**
+ * @brief Convierte el tipo de una matriz (type) a un string
+ * 
+ * @param type  tipo en codificación de OpenCV
+ * @return std::string 
+ */
+std::string type2str(int type);
 #endif
