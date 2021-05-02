@@ -28,7 +28,7 @@ int main(int argc, char **argv)
         return 1;
     }
 
-    auto taraxl_depth = std::make_unique<TaraXLDepth>(selected_cam);
+    auto taraxl_depth = std::unique_ptr<TaraXLDepth>(new TaraXLDepth(selected_cam));
     int minDisparity, maxDisparity;
     cv::Mat left, right, disparityMap, depthMap;
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
             std::cout << "Tamaño imagen: " << left.cols << "x" << left.rows << std::endl;
             std::cout << "Canales imagen: "  << left.channels() << std::endl;
         }
-        std::cout std::endl << "Modo de presición: " << ac_string[i];
+        std::cout << std::endl << "Modo de presición: " << ac_string[i] << std::endl;
         std::cout << "Disparidad mínima: " << minDisparity << std::endl;
         std::cout << "Disparidad máxima: " << maxDisparity << std::endl;
         std::cout << "Canales mapa disparidad: " << disparityMap.channels() << std::endl;
@@ -51,4 +51,5 @@ int main(int argc, char **argv)
         std::cout << "Canales mapa profundidad: " << depthMap.channels() << std::endl;
         std::cout << "Tipo mapa de profundidad-: " << type2str(depthMap.type()) << std::endl;
     }
+    selected_cam.disconnect();
 }

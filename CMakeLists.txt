@@ -29,11 +29,16 @@ set_directory_properties( PROPERTIES COMPILE_DEFINITIONS "" )
 
 add_subdirectory(commons)
 
-option(BASIC_IMGPROC "Procesamiento básico con cámara estéreo" OFF)
-option(VIDEO_CAPTURE "Módulo para grabar video" OFF)
-option(FPS_BENCHMARKS "Benchmarks de FPS" OFF)
-option(STEREO_PARAMS "Exportar parametros de camara" OFF)
+option(BASIC_IMGPROC "Procesamiento básico con cámara estéreo" ON)
+option(VIDEO_CAPTURE "Módulo para grabar video" ON)
+option(FPS_BENCHMARKS "Benchmarks de FPS" ON)
+option(STEREO_PARAMS "Exportar parametros de camara" ON)
 option(SCRIPTS "Compilar Scripts del repositorio" ON)
+option(DEPTH_PRECISION "Compilar benchmark de precision mapa de profundidad" ON)
+
+if(DEPTH_PRECISION)
+    add_subdirectory(depth_precision)
+endif(DEPTH_PRECISION)
 
 if(BASIC_IMGPROC)
     add_subdirectory(basic_imgproc)

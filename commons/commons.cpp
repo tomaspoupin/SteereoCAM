@@ -152,11 +152,12 @@ void record_video(std::vector<cv::Mat>& footage, double fps, const std::string& 
         cv::resize(frame, output_frame, cv::Size(1280, 720));
         record.write(output_frame);
     }
+}
     
 std::string type2str(int type) {
   std::string r;
 
-  unsigend char depth = type & CV_MAT_DEPTH_MASK;
+  unsigned char depth = type & CV_MAT_DEPTH_MASK;
   unsigned char chans = 1 + (type >> CV_CN_SHIFT);
 
   switch ( depth ) {
