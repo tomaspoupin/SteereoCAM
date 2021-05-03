@@ -1,12 +1,15 @@
 #include <iostream>
 #include <vector>
 #include <commons.hpp>
+#include <CSVWriter.h>
 
 cv::Mat generateInfMask(cv::Mat src);
 
 const ACCURACY_MODE accuracy_mode[3] = {ACCURACY_MODE::LOW,
                                         ACCURACY_MODE::HIGH,
                                         ACCURACY_MODE::ULTRA};
+
+double time_ms = 60000;
 
 int main(int argc, char** argv) {
     TaraXL taraxl_cam;
@@ -27,25 +30,36 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    CSVWriter measurements;
+    measurements.newRow() << "Distancia";
+
     auto taraxl_depth = std::unique_ptr<TaraXLDepth>(new TaraXLDepth(selected_cam));
     int minDisparity, maxDisparity;
-    cv::Mat left, right, disparityMap, depthMap;
+    cv::Mat left, right, disparity_map, depth_map;
 
     cv::Rect ROI(700, 550, 200, 200);
     
     taraxl_depth->setAccuracy(accuracy_mode[1]);
 
     for (int i = 0; i < 10; ++i)
-        taraxl_depth->getMap(left, right, disparityMap, true, depthMap, true);
+        taraxl_depth->getMap(left, right, disparity_map, true, depth_map, true);
 
-    cv::Mat area(depthMap, ROI);
+    auto init = std::chrono::high_resolution_clock::now();
+    while(true){
+        auto checkpoint = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> ms_checkpoint = checkpoint - init;
+        if (ms_checkpoint.count() >= time_ms)
+            break;
 
-    cv::Mat mask = generateInfMask(area);
-
-    cv::Scalar mean = cv::mean(area, mask);
-
-    std::cout << "Valor promedio area: " << mean.val[0] << std::endl;
+        taraxl_depth->getMap(left, right, disparity_map, true, depth_map, true);
+        cv::Mat measurement_area(depth_map, ROI);
+        cv::Mat mask = generateInfMask(measurement_area);
+        cv::Scalar mean = cv::mean(area, mask);
+        measurements.newRow() << mean.val[0];
+    }
     
+    measurements.writeToFile("distancias.csv");
+
     selected_cam.disconnect();
 }
 
