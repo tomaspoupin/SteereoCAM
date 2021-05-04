@@ -64,7 +64,7 @@ Para realizar la instalación de uno o varios módulos, primero se debe clonar e
 $ git clone https://github.com/tomaspoupin/SteereoCAM.git
 ```
 
-Luego, se entrar dentro del repositorio y se debe crear un directorio para construir los módulos y entrar a dicha carpeta.
+Luego, se debe entrar al repositorio, crear un directorio para construir los módulos y entrar a dicha carpeta.
 
 ```
 $ cd SteereoCAM
@@ -281,7 +281,7 @@ $ ./benchmark_disparity_opencv 30 64 9
 ```
 
 ## Medición de precisión
-La implementación del benchmark se encuentra en `depth_precision`. Para observar la precisión con la cual la cámara es capaz de medir la profundidad, se montó un entorno donde la cámara mira hacia la pared a diferentes distancias, luego se obtienen mapas de disparidad durante 5 minutos midiendo sobre un cuadrado de 100x100 pixeles utilizando los diferentes modos de la cámara. El resultado del benchmark es un archivo csv con las mediciones de distancia obtenidas en centímetros.
+La implementación del benchmark se encuentra en `depth_precision`. Para observar la precisión con la cual la cámara es capaz de medir la profundidad, se debe montar un entorno donde la cámara mira hacia la pared a diferentes distancias, el programa se encarga de tomar mediciones de distancia durante 5 minutos utilizando un cuadrado de 100x100 pixeles al centro del mapa de profundidad obtenido. El resultado del benchmark es un archivo csv con las mediciones de distancia obtenidas en centímetros. Además se generan imágenes del lente izquierdo y derecho, como también un sample del mapa de profundidad y una imagen de la región utilizada para la medición.
 
 ### Instrucciones de uso
 

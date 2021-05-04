@@ -63,12 +63,11 @@ int main(int argc, char** argv) {
     for (int i = 0; i < 10; ++i)
         taraxl_depth->getMap(left, right, disparity_map, true, depth_map, true);
 
-    cv::Mat depthU8, depthROI(depth_map, ROI);
-    cv::normalize(depth_map, depthU8, 0, 255, cv::NORM_MINMAX, CV_8UC1);
+    cv::Mat leftROI(left, ROI);
 
     cv::imwrite("left.jpg", left);
     cv::imwrite("right.jpg", left);
-    cv::imwrite("ROI.jpg", depthROI);
+    cv::imwrite("ROI.jpg", leftROI);
     cv::imwrite("depth_map.jpg", depth_map);
 
     std::cout << "Modo de medicion: " << ac_string[accuracy] << std::endl;
