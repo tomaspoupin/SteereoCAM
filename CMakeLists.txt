@@ -32,7 +32,6 @@ add_subdirectory(commons)
 option(BASIC_IMGPROC "Procesamiento básico con cámara estéreo" ON)
 option(VIDEO_CAPTURE "Módulo para grabar video" ON)
 option(FPS_BENCHMARKS "Benchmarks de FPS" ON)
-option(STEREO_PARAMS "Exportar parametros de camara" ON)
 option(SCRIPTS "Compilar Scripts del repositorio" ON)
 option(DEPTH_PRECISION "Compilar benchmark de precision mapa de profundidad" ON)
 
@@ -51,10 +50,6 @@ endif(VIDEO_CAPTURE)
 if(FPS_BENCHMARKS)
     add_subdirectory(fps_benchmarks)
 endif(FPS_BENCHMARKS)
-
-if(STEREO_PARAMS)
-    add_subdirectory(cam_params)
-endif(STEREO_PARAMS)
 
 if(SCRIPTS)
     add_subdirectory(scripts)

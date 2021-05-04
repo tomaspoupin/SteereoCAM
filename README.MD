@@ -2,7 +2,7 @@
 En este repositorio se podrá encontrar información relevante acerca del uso de la cámara estéreo STEEREOCAM de **e-con systems**.
 
 <center>
-<img src="stereocam.jpg" alt="Cámara estéreo" width="400"/>
+<img src="media/steereocam.jpg" alt="Cámara estéreo" width="400"/>
 </center>
 
 # Tabla de contenidos
@@ -43,24 +43,70 @@ La siguiente lista muestra la documentación disponible para el uso de la cámar
 - **[Documentación API](TaraXL_API.pdf)**: Descripción de la API del **SDK** para utilizar la cámara estéreo en C++.
 
 # Módulos
-A continuación se muestran los módulos disponibles que pueden ser utilizados junto al dispositivo.
+A continuación se muestra una lista de los modulos disponibles:
+
+- **Procesamiento básico**: Implementado en `basic_imgproc`, obtiene una imagen estéreo de la cámara y le aplica filtros básicos.
+- **Captura de video**: Implementado en `video_capture`, permite grabar video en HD o SD utilizando la cámara estéreo.
+- **Benchmarks de FPS**: Implementado en `fps_benchmarks`, Conjunto de benchmarks para medir la velocidad en fps con la cual se pueden ejecutar
+diferentes rutinas de la cámara.
+- **Scripts**: Implementado en `scripts`, contiene una variedad de scripts de utilidad cómo obtener los parámetros de la cámara o imprimir información
+respecto a la cámara.
+- **Precisión de cámara**: Implementado en `depth_precision`, consiste en un benchmark para medir la precisión de la cámara para medir la profundidad.
+
+## Instrucciones de instalación
+
+Para realizar la instalación de uno o varios módulos, primero se debe clonar el repositorio.
+
+```
+$ git clone https://github.com/tomaspoupin/SteereoCAM.git
+```
+
+Luego, se entrar dentro del repositorio y se debe crear un directorio para construir los módulos y entrar a dicha carpeta.
+
+```
+$ cd SteereoCAM
+$ mkdir -p build && cd build
+```
+
+Por defecto, el repositorio está configurado para que ningún módulo sea compilado, por lo que para configurar la compilación de todos los módulos del repositorio se debe ejecutar lo siguiente:
+
+```
+$ cmake -DBASIC_IMGPROC=ON \
+        -DVIDEO_CAPTURE=ON \
+        -DFPS_BENCHMARKS=ON \
+        -DSCRIPTS=ON \
+        -DDEPTH_PRECISION=ON ..
+```
+
+Si se desea configurar sólamente un modulo en específico, se debe ejecutar:
+
+```
+$ cmake -D<Modulo>=ON ..
+```
+
+Donde `<Modulo>` puede tener los siguientes valores:
+
+- `BASIC_IMGPROC`: Módulo de procesamiento básico de imágen estéreo.
+- `VIDEO_CAPTURE`: Módulo de captura de video.
+- `FPS_BENCHMARKS`: Módulo de benchmarks de fps.
+- `SCRIPTS`: Módulo de scripts de utilidad.
+- `DEPTH_PRECISION`: Módulo de benchmark de precisión.
+
+Finalmente, para compilar los módulos seleccionados, ejecutar:
+
+```
+$ make
+```
+
+Los ejecutables resultantes estarán disponibles en el directorio `build/bin` generado luego de la compilación. A continuación se muestra la descripción de cada módulo en específico.
 
 ## Procesamiento básico con cámara estéreo
 
 Este módulo obtiene imágenes de ambos lentes de la cámara utilizando el **SDK** para ser procesado por filtros básicos, se encuentra implementado en `basic_imgproc`.
 
-### **Instrucciones de instalación**
- luego de haber completado el instructivo `instructivo_de_uso_ecam20.pdf`, se debe clonar el repositorio a la jetson de destino y compilar el programa, ejecutando los siguientes comandos:
+### **Instrucciones de uso**
 
-```
-$ git clone https://github.com/tomaspoupin/SteereoCAM.git
-$ cd SteereoCam/basic_imgproc
-$ mkdir build -p && cd build
-$ cmake ..
-$ make
-```
-
-Luego para utilizar, simplemente se debe ejecutar el binario resultante.
+Para utilizar, simplemente se debe ejecutar el binario que se encuentra dentro de `build/bin`, utilizando el siguiente comando:
 
 ```
 $ ./basic_stereo
@@ -72,30 +118,14 @@ El módulo de captura de video permite grabar en tiempo real utilizando la cáma
 - 1280 x 720 (HD)
 - 640 x 480 (SD)
 
-### **Instrucciones de instalación**
-
-1. Dentro del terminal de la Jetson Nano, clonar el repositorio y entrar a la carpeta del módulo.
-
-```
-$ git clone https://github.com/tomaspoupin/SteereoCAM.git
-$ cd SteereoCam/video_capture
-```
-
-2. Compilar el programa.
-
-```
-$ mkdir build -p && cd build
-$ cmake ..
-$ make
-```
-
-3. Ejecutar el programa.
-
-```
-$ ./video_capture
-```
 
 ### **Instrucciones de uso**
+
+Dentro de la carpeta `build/bin`, ejecutar:
+
+```
+./video_capture
+```
 
 La sinopsis del programa es el siguiente:
 
@@ -114,11 +144,9 @@ Luego para finalizar la grabación, se debe presionar la tecla `f`.
 
 ![Ejemplo de ejecución](media/vid_capture.gif)
 
-# Benchmarks
+# Benchmarks de velocidad
 
-Para medir el desempeño de la cámara se generaron una serie de pruebas de rendimiento, su implementación se encuentra en `benchmarks`, los benchmarks disponibles son los siguientes:
-
-## Benchmarks de velocidad
+Para medir el desempeño de la cámara se generaron una serie de pruebas de rendimiento, su implementación se encuentra en `fps_benchmarks`, los benchmarks disponibles son los siguientes:
 
 - **Benchmark FPS**: Benchmark que mide la velocidad con la cual el dispositivo es capaz de adquirir un frame de ambos lentes de la cámara.
     
@@ -137,7 +165,7 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
   - Parámetros:
 
     - Tiempo de ejecución: el tiempo que se ejecuta el benchmark en segundos.
-    - Nivel de precisión: Cantidad de procesamiento realizado, tiene tres niveles: **LOW**, **HIGH** y **ULTRA**. **LOW** implica mayor FPS, menor precisión, con un rango útil de 145[cm] a 8[m]. **HIGH** implica menor FPS, mayor precisión, con un rango útil de 95[cm] a 8[m]. **ULTRA** implica FPS muy reducidos, mayor precisión con un rango útil de 115[cm] a 8[m].
+    - Nivel de precisión: Cantidad de procesamiento realizado, tiene tres niveles: **LOW**, **HIGH** y **ULTRA**. **LOW** implica mayor FPS, menor precisión, con un rango útil de 145[cm] a 8[m] y 64 niveles de disparidad. **HIGH** implica menor FPS, mayor precisión, con un rango útil de 95[cm] a 8[m] y 128 niveles de disparidad. **ULTRA** implica FPS muy reducidos, mayor precisión con un rango útil de 115[cm] a 8[m] y 128 niveles de disparidad.
   
   - Variable medida: Tiempo de ejecución en `ms` de función `TaraXlDepth.getMap` (vease [documentación API](instructivo_de_uso_ecam20.pdf)).
 
@@ -164,34 +192,15 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
     - Video en formato `.mkv` que contiene mapas de disparidad obtenidas durante el benchmark.
     - 2 Videos en formato `.mkv` que contiene las imágenes obtenidas del lente izquierdo y derecho.
 
-## Instrucciones de instalación
+## Instrucciones de uso
 
-1. Dentro del terminal de la Jetson Nano, clonar el repositorio y entrar a la carpeta `benchmarks`.
-
-```
-$ git clone https://github.com/tomaspoupin/SteereoCAM.git
-$ cd SteereoCam/benchmarks
-```
-
-2. Compilar el programa.
-
-```
-$ mkdir build -p && cd build
-$ cmake ..
-$ make
-```
-
-Dentro del directorio `benchmarks` debiese aparecer un directorio llamado `bin` con los siguientes ejecutables:
+Dentro del directorio `build/bin` aparecerán los siguientes ejecutables:
 
 - `benchmark_fps`
 - `benchmark_depth_sdk`
 - `benchmark_disparity_opencv`
 
-A continuación se explica el uso de cada uno de los ejecutables.
-
-## Instrucciones de uso
-
-Para cada uno de los programas se debe estár dentro de la carpeta `benchmarks/bin`. Al finalizar la ejecución los resultados son exportados al directorio `benchmarks/bin/report/<nombre de benchmark>`.
+Al finalizar la ejecución de cualquiera de los 3 binarios, los resultados son exportados al directorio `report/<nombre de benchmark>`.
 
 ### **Benchmark FPS**
 
@@ -252,17 +261,35 @@ Cómo ejemplo, para ejecutar durante 30 segundos con disparidad de 64 y tamaño 
 ```
 $ ./benchmark_disparity_opencv 30 64 9
 ```
-## Resultados
+
+# Medición de precisión
+La implementación del benchmark se encuentra en `depth_precision`. Para observar la precisión con la cual la cámara es capaz de medir la profundidad, se montó un entorno donde la cámara mira hacia la pared a diferentes distancias, luego se obtienen mapas de disparidad durante 5 minutos midiendo sobre un cuadrado de 100x100 pixeles utilizando los diferentes modos de la cámara. El resultado del benchmark es un archivo csv con las mediciones de distancia obtenidas en centímetros.
+
+## Instrucciones de uso
+
+El formato de ejecución del programa es el siguiente:
+
+```
+$ ./depth_measurements <time> <depth_accuracy>
+```
+
+Donde `time` es el tiempo de ejecución en segundos y `depth_accuracy` es el nivel de precisión para obtener los mapas de profundidad, los valores posibles para `depth_accuracy` son:
+
+- `0`: Precisión Baja
+- `1`: Precisión Alta
+- `2`: Precisión Ultra
+
+# Resultados
 
 Precisión Alta            |  Precisión Ultra
 :-------------------------:|:-------------------------:
-![](media/depth_high_animated.gif)  |  ![](media/depth_ultra_animated.gif)
+![](media/fps_benchmark/depth_high_animated.gif)  |  ![](media/fps_benchmark/depth_ultra_animated.gif)
 
 Precisión Baja            |  OpenCV
 :-------------------------:|:-------------------------:
-![](media/depth_low_animated.gif)  |  ![](media/opencv_animated.gif)
+![](media/fps_benchmark/depth_low_animated.gif)  |  ![](media/fps_benchmark/opencv_animated.gif)
 
-### **Comparación Velocidad**
+### **Comparación de Velocidad**
 
 A continuación se muestra una comparativa entre los resultados obtenidos y las especificaciones del fabricante.
 
@@ -274,20 +301,62 @@ A continuación se muestra una comparativa entre los resultados obtenidos y las 
 | FPS Generación Mapas ULTRA |        -       |   2.1800  |
 
 
+### **Tabla de resultados medición de profundidad**
+
+| Distancia Real [cm] | Modo de operación | Media [cm] | STD [cm] | Min [cm] | Max [cm] |   Error  | STD Error |
+|:--------------:|:-----------------:|:----------:|:--------:|:--------:|:--------:|:--------:|:---------:|
+|       200      |        LOW        |   502.55   |   72.8   |  319.26  |  835.94  |  151.27% |   36.40%  |
+|       200      |        HIGH       |   184.26   |   0.61   |  182.28  |  186.42  |   7.87%  |   0.31%   |
+|       200      |       ULTRA       |   185.97   |   0.28   |  185.23  |  187.06  |   7.02%  |   0.14%   |
+|       150      |        LOW        |   293.44   |   41.47  |  204.56  |  513.37  |  95.63%  |   27.65%  |
+|       150      |        HIGH       |   142.54   |   0.30   |  141.53  |  143.62  |   4.97%  |   0.20%   |
+|       150      |       ULTRA       |   143.58   |   0.16   |  143.07  |  144.12  |   4.28%  |   0.11%   |
+|       100      |        LOW        |   533.55   |   66.94  |  386.24  |  877.97  |  433.55% |   66.94%  |
+|       100      |        HIGH       |    98.36   |   0.19   |   97.70  |   99.04  |   1.64%  |   0.19%   |
+|       100      |       ULTRA       |   207.56   |   15.34  |  160.99  |  263.14  |  107.40% |   15.34%  |
+|       50       |        LOW        |   751.42   |   98.40  |  490.30  |  1188.20 | 1402.84% |  196.79%  |
+|       50       |        HIGH       |   190.67   |   9.30   |  147.26  |  207.84  |  281.34% |   18.54%  |
+|       50       |       ULTRA       |   223.21   |   51.49  |  186.99  |  774.66  |  346.42% |  102.98%  |
+
 ### **Histogramas**
 
 1. FPS Bruto
 
-![](media/fps_bruto.jpg)
+![](media/fps_benchmark/fps_bruto.jpg)
 
 2. FPS Depth LOW
    
-![](media/fps_low.jpg)
+![](media/fps_benchmark/fps_low.jpg)
 
 3. FPS Depth HIGH
    
-![](media/fps_high.jpg)
+![](media/fps_benchmark/fps_high.jpg)
 
 4. FPS Depth ULTRA
    
-![](media/fps_ultra.jpg)
+![](media/fps_benchmark/fps_ultra.jpg)
+
+5. Error mediciones de profundidad a 200 [cm]
+
+Precisión Baja            |  Precisión Alta          | Precisión Ultra
+:-------------------------:|:-------------------------:|:---------------------------:
+![](media/depth_histograms/low_200_norm_error.png)  |  ![](media/depth_histograms/high_200_norm_error.png) | ![](media/depth_histograms/ultra_200_norm_error.png)
+
+
+6. Error mediciones de profundidad a 150 [cm]
+
+Precisión Baja            |  Precisión Alta          | Precisión Ultra
+:-------------------------:|:-------------------------:|:---------------------------:
+![](media/depth_histograms/low_150_norm_error.png)  |  ![](media/depth_histograms/high_150_norm_error.png) | ![](media/depth_histograms/ultra_150_norm_error.png)
+
+7. Error mediciones de profundidad a 100 [cm]
+
+Precisión Baja            |  Precisión Alta          | Precisión Ultra
+:-------------------------:|:-------------------------:|:---------------------------:
+![](media/depth_histograms/low_100_norm_error.png)  |  ![](media/depth_histograms/high_100_norm_error.png) | ![](media/depth_histograms/ultra_100_norm_error.png)
+
+8. Error mediciones de profundidad a 50 [cm]
+
+Precisión Baja            |  Precisión Alta          | Precisión Ultra
+:-------------------------:|:-------------------------:|:---------------------------:
+![](media/depth_histograms/low_50_norm_error.png)  |  ![](media/depth_histograms/high_50_norm_error.png) | ![](media/depth_histograms/ultra_50_norm_error.png)
