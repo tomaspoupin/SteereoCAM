@@ -16,13 +16,15 @@ En este repositorio se podrá encontrar información relevante acerca del uso de
     - [**Instrucciones de uso**](#instrucciones-de-uso)
   - [Captura de video](#captura-de-video)
     - [**Instrucciones de uso**](#instrucciones-de-uso-1)
-- [Benchmarks de velocidad](#benchmarks-de-velocidad)
-  - [Instrucciones de uso](#instrucciones-de-uso-2)
+  - [Scripts](#scripts)
+    - [Instrucciones de uso](#instrucciones-de-uso-2)
+  - [Benchmarks de velocidad](#benchmarks-de-velocidad)
+    - [Instrucciones de uso](#instrucciones-de-uso-3)
     - [**Benchmark FPS**](#benchmark-fps)
     - [**Benchmark SDK Depth Map**](#benchmark-sdk-depth-map)
     - [**Benchmark OpenCV Disparity Map**](#benchmark-opencv-disparity-map)
-- [Medición de precisión](#medición-de-precisión)
-  - [Instrucciones de uso](#instrucciones-de-uso-3)
+  - [Medición de precisión](#medición-de-precisión)
+    - [Instrucciones de uso](#instrucciones-de-uso-4)
 - [Resultados](#resultados)
     - [**Comparación de Velocidad**](#comparación-de-velocidad)
     - [**Tabla de resultados medición de profundidad**](#tabla-de-resultados-medición-de-profundidad)
@@ -145,7 +147,22 @@ Luego para finalizar la grabación, se debe presionar la tecla `f`.
 
 ![Ejemplo de ejecución](media/vid_capture.gif)
 
-# Benchmarks de velocidad
+## Scripts
+El módulo scripts implementado en `scripts` contiene los siguientes ejecutables en la carpeta `build/bin`:
+
+- **print_depth_info**: Script que imprime en pantalla información sobre tipo y formato de las imágenes estéreo, los mapas de disparidad y de profundidad.
+- **export_cam_params**: Script que exporta en formato `YML` parámetros de la cámara estéreo tales como los parámetros intrínsecos, distancia focal, entre otros. El archivo `YML` resultante es compatible con la clase `cv::FileStorage`.
+
+### Instrucciones de uso
+
+Dentro de la carpeta en donde se encuentra los scripts, ejecutar:
+
+```
+$ ./print_depth_info
+$ ./export_cam_params
+```
+
+## Benchmarks de velocidad
 
 Para medir el desempeño de la cámara se generaron una serie de pruebas de rendimiento, su implementación se encuentra en `fps_benchmarks`, los benchmarks disponibles son los siguientes:
 
@@ -193,7 +210,7 @@ Para medir el desempeño de la cámara se generaron una serie de pruebas de rend
     - Video en formato `.mkv` que contiene mapas de disparidad obtenidas durante el benchmark.
     - 2 Videos en formato `.mkv` que contiene las imágenes obtenidas del lente izquierdo y derecho.
 
-## Instrucciones de uso
+### Instrucciones de uso
 
 Dentro del directorio `build/bin` aparecerán los siguientes ejecutables:
 
@@ -263,10 +280,10 @@ Cómo ejemplo, para ejecutar durante 30 segundos con disparidad de 64 y tamaño 
 $ ./benchmark_disparity_opencv 30 64 9
 ```
 
-# Medición de precisión
+## Medición de precisión
 La implementación del benchmark se encuentra en `depth_precision`. Para observar la precisión con la cual la cámara es capaz de medir la profundidad, se montó un entorno donde la cámara mira hacia la pared a diferentes distancias, luego se obtienen mapas de disparidad durante 5 minutos midiendo sobre un cuadrado de 100x100 pixeles utilizando los diferentes modos de la cámara. El resultado del benchmark es un archivo csv con las mediciones de distancia obtenidas en centímetros.
 
-## Instrucciones de uso
+### Instrucciones de uso
 
 El formato de ejecución del programa es el siguiente:
 
