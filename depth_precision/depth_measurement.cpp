@@ -11,6 +11,7 @@ const ACCURACY_MODE accuracy_mode[3] = {ACCURACY_MODE::LOW,
                                         ACCURACY_MODE::ULTRA};
 
 double time_ms = 0;
+double print_interval = 1000; //ms
 
 int main(int argc, char** argv) {
 
@@ -74,6 +75,7 @@ int main(int argc, char** argv) {
     std::cout << "Comenzando medicion, tiempo: " << (int) time_ms / 1000 << " segundos." << std::endl;
 
     auto init_time = std::chrono::high_resolution_clock::now();
+    auto print_time = std::chrono::high_resolution_clock::now();
     while(true){
         auto checkpoint = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> ms_checkpoint = checkpoint - init_time;
@@ -84,6 +86,13 @@ int main(int argc, char** argv) {
         cv::Mat measurement_area(depth_map, ROI);
         cv::Mat mask = generateInfMask(measurement_area);
         cv::Scalar mean = cv::mean(measurement_area, mask);
+
+
+        std::chrono::duration<double, std::milli> print_checkpoint = checkpoint - print_time;
+        if (print_checkpoint.count() >= print_interval) {
+            auto print_time = std::chrono::high_resolution_clock::now();
+            std::cout << "Distancia: " << mean.val[0] << std::endl;
+        }
         measurements.newRow() << mean.val[0];
     }
 
