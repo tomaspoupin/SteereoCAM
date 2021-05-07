@@ -354,27 +354,20 @@ A continuación se muestra una comparativa entre los resultados obtenidos y las 
    
 ![](media/fps_benchmark/fps_ultra.jpg)
 
-5. Error mediciones de profundidad a 200 [cm]
+1. Error mediciones de profundidad LOW
 
-Precisión Baja            |  Precisión Alta          | Precisión Ultra
-:-------------------------:|:-------------------------:|:---------------------------:
-![](media/depth_histograms/low_200_norm_error.png)  |  ![](media/depth_histograms/high_200_norm_error.png) | ![](media/depth_histograms/ultra_200_norm_error.png)
+200 [cm]          |  150 [cm]
+:-------------------------:|:-------------------------:
+![](media/depth_histograms/low_200_norm_error.png)  |  ![](media/depth_histograms/low_150_norm_error.png)
 
+2. Error mediciones de profundidad ULTRA
 
-6. Error mediciones de profundidad a 150 [cm]
+200 [cm]      |  150 [cm]
+:-------------------------:|:-------------------------:
+![](media/depth_histograms/ultra_200_norm_error.png)  |  ![](media/depth_histograms/ultra_150_norm_error.png)
 
-Precisión Baja            |  Precisión Alta          | Precisión Ultra
-:-------------------------:|:-------------------------:|:---------------------------:
-![](media/depth_histograms/low_150_norm_error.png)  |  ![](media/depth_histograms/high_150_norm_error.png) | ![](media/depth_histograms/ultra_150_norm_error.png)
+3. Error mediciones de profundidad HIGH
 
-7. Error mediciones de profundidad a 100 [cm]
-
-Precisión Baja            |  Precisión Alta          | Precisión Ultra
-:-------------------------:|:-------------------------:|:---------------------------:
-![](media/depth_histograms/low_100_norm_error.png)  |  ![](media/depth_histograms/high_100_norm_error.png) | ![](media/depth_histograms/ultra_100_norm_error.png)
-
-8. Error mediciones de profundidad a 50 [cm]
-
-Precisión Baja            |  Precisión Alta          | Precisión Ultra
-:-------------------------:|:-------------------------:|:---------------------------:
-![](media/depth_histograms/low_50_norm_error.png)  |  ![](media/depth_histograms/high_50_norm_error.png) | ![](media/depth_histograms/ultra_50_norm_error.png)
+200 [cm]           |  150 [cm]     | 100 [cm]
+:-------------------------:|:-------------------------:|:-------------------------:
+![](media/depth_histograms/high_200_norm_error.png)  |  ![](media/depth_histograms/high_150_norm_error.png) | ![](media/depth_histograms/high_100_norm_error.png)

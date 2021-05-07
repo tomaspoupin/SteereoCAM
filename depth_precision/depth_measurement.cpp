@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     int minDisparity, maxDisparity;
     cv::Mat left, right, disparity_map, depth_map;
 
-    cv::Rect ROI(700, 550, 200, 200);
+    cv::Rect ROI(700, 1, 200, 800);
     
     taraxl_depth->setAccuracy(accuracy_mode[accuracy]);
 
