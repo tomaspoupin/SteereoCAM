@@ -25,7 +25,7 @@ if __name__ == "__main__":
     print("Resumen:")
     print(distances.describe())
 
-    error = np.abs(dist_serie - distance)
+    error = np.abs(dist_serie[dist_serie!=0][dist_serie<200] - distance)
 
     norm_error = ((error/distance)*100)
     norm_error_dist = sns.histplot(norm_error, kde=False, bins=16)

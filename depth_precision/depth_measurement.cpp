@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
     int minDisparity, maxDisparity;
     cv::Mat left, right, disparity_map, depth_map;
 
-    cv::Rect ROI(700, 1, 200, 800);
+    cv::Rect ROI(700, 550, 200, 200);
     
     taraxl_depth->setAccuracy(accuracy_mode[accuracy]);
 
@@ -109,7 +109,7 @@ cv::Mat generateInfMask(cv::Mat src) {
 
     for (int i = 0; i < src.cols; ++i) {
         for (int j = 0; j < src.rows; ++j) {
-            if (!cvIsInf(src.at<float>(j, i)) && src.at<float>(j, i) < 200) {
+            if (!cvIsInf(src.at<float>(j, i)) && src.at<float>(j, i) < 300) {
                 dst.at<unsigned char>(j, i) = 255;
             }
             else {
