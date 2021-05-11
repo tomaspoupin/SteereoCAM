@@ -219,6 +219,7 @@ cam_params get_params() {
     std::cout << "Seleccione formato de grabación:" << std::endl;
     std::cout << "0: 1280x720 (HD) (por defecto)" << std::endl;
     std::cout << "1: 640x480 (SD)" << std::endl;
+    std::cout << "2: 1920x1080 (FHD)" << std::endl;
     std::cout << "Opción: ";
     cam_params selected_params = {0, {0, 0}};
     int option;
@@ -235,6 +236,12 @@ cam_params get_params() {
             selected_params.fps = 0.0;
             selected_params.res.width = 640;
             selected_params.res.height = 480;
+            break;
+
+        case 2:
+            selected_params.fps = 0.0;
+            selected_params.res.width = 1920;
+            selected_params.res.height = 1080;
             break;
 
         default:
