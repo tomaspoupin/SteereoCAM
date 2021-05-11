@@ -109,7 +109,7 @@ cv::Mat generateInfMask(cv::Mat src) {
 
     for (int i = 0; i < src.cols; ++i) {
         for (int j = 0; j < src.rows; ++j) {
-            if (!cvIsInf(src.at<float>(j, i))) {
+            if (!cvIsInf(src.at<float>(j, i)) && src.at<float>(j, i) < 200) {
                 dst.at<unsigned char>(j, i) = 255;
             }
             else {
